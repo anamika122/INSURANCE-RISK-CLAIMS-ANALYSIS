@@ -192,14 +192,17 @@ insurance-risk-analysis/
 ### Running the Analysis
 ```sql
 -- Example: Analyze customer demographics by age group
-SELECT 
-    age_group,
-    COUNT(*) as customer_count,
-    AVG(claim_amount) as avg_claim_amount,
-    SUM(claim_count) as total_claims
-FROM customer_analysis 
-GROUP BY age_group
-ORDER BY avg_claim_amount DESC;
+select case 
+when timestampdiff (year,BirthDate,curdate()) < 25 then '25'
+when timestampdiff (year,BirthDate, curdate()) between 25 and 40 then '25-40'
+when timestampdiff  (year,BirthDate, curdate()) between 40 and 60 then '40-60'
+else '60+'
+end as age_group,
+count(*) as policyholders,
+avg(`Claim Freq`) as avg_claim_fre,
+round(avg(`Claim Amount`),2) as avg_claim_amount
+from insurance_policies_data
+group by age_group
 ```
 
 ## Key SQL Queries
